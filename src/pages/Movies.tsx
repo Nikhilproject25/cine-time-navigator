@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -23,162 +22,162 @@ const Movies = () => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [bookingStep, setBookingStep] = useState('movies'); // movies, showtimes, seats, summary
 
-  // Extended movie data inspired by BookMyShow
+  // Enhanced movie data with diverse images and 2025 dates
   const latestMovies = [
     {
       id: 1,
-      title: "Jawan",
-      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop",
-      genre: "Action, Thriller",
-      releaseDate: "2024-01-15",
-      rating: "8.5",
-      duration: "169 min",
-      language: "Hindi",
-      description: "An emotional journey of a man who is set to rectify the wrongs in the society.",
-      votes: "485.2K",
-      theaters: ["PVR Nexus", "INOX GVK One", "AMB Cinemas"]
-    },
-    {
-      id: 2,
-      title: "Leo",
-      image: "https://images.unsplash.com/photo-1489599735734-79b4609e24c8?w=400&h=600&fit=crop",
-      genre: "Action, Thriller",
-      releaseDate: "2024-02-01",
-      rating: "8.2",
-      duration: "164 min",
-      language: "Tamil",
-      description: "A mild-mannered cafe owner discovers that he's accidentally caught in the middle of a war between two crime families.",
-      votes: "342.8K",
-      theaters: ["Prasads IMAX", "Forum Sujana Mall", "PVR Kukatpally"]
-    },
-    {
-      id: 3,
-      title: "Tiger 3",
-      image: "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=400&h=600&fit=crop",
-      genre: "Action, Adventure",
-      releaseDate: "2024-01-21",
-      rating: "7.8",
-      duration: "155 min",
-      language: "Hindi",
-      description: "Tiger and Zoya are back - to save the country and their family.",
-      votes: "298.5K",
-      theaters: ["INOX CMR Central", "PVR Preston", "Asian GPR"]
-    },
-    {
-      id: 4,
-      title: "Salaar",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
+      title: "Pushpa 2: The Rule",
+      image: "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=400&h=600&fit=crop",
       genre: "Action, Drama",
-      releaseDate: "2024-01-10",
+      releaseDate: "2025-01-15",
       rating: "8.7",
-      duration: "175 min",
+      duration: "178 min",
       language: "Telugu",
-      description: "The fate of a violently contested kingdom hangs on the fraught bond between two friends-turned-foes.",
+      description: "The rule continues as Pushpa's empire faces new challenges and enemies.",
       votes: "567.3K",
       theaters: ["Sudarshan 35MM", "Sandhya 70MM", "Devi 70MM"]
     },
     {
+      id: 2,
+      title: "RRR: Rise Roar Revolt",
+      image: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&h=600&fit=crop",
+      genre: "Action, Period",
+      releaseDate: "2025-02-01",
+      rating: "8.9",
+      duration: "187 min",
+      language: "Telugu",
+      description: "A tale of two legendary revolutionaries and their journey away from home.",
+      votes: "892.1K",
+      theaters: ["Prasads IMAX", "Forum Sujana Mall", "PVR Kukatpally"]
+    },
+    {
+      id: 3,
+      title: "Baahubali 3: The Crown",
+      image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop",
+      genre: "Action, Drama",
+      releaseDate: "2025-01-21",
+      rating: "8.8",
+      duration: "165 min",
+      language: "Telugu",
+      description: "The epic saga continues with new kingdoms and greater battles.",
+      votes: "745.2K",
+      theaters: ["INOX CMR Central", "PVR Preston", "Asian GPR"]
+    },
+    {
+      id: 4,
+      title: "KGF Chapter 3",
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=600&fit=crop",
+      genre: "Action, Thriller",
+      releaseDate: "2025-01-10",
+      rating: "8.6",
+      duration: "168 min",
+      language: "Telugu",
+      description: "Rocky's journey reaches its climactic conclusion in the gold fields.",
+      votes: "623.7K",
+      theaters: ["Sudarshan 35MM", "Sandhya 70MM", "Devi 70MM"]
+    },
+    {
       id: 5,
-      title: "Dunki",
-      image: "https://images.unsplash.com/photo-1489599735734-79b4609e24c8?w=400&h=600&fit=crop",
-      genre: "Comedy, Drama",
-      releaseDate: "2024-01-05",
-      rating: "8.1",
-      duration: "161 min",
-      language: "Hindi",
-      description: "Four friends from a Punjab village try to immigrate to England using an illegal route called 'Dunki'.",
-      votes: "234.7K",
+      title: "Arjun Reddy 2",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
+      genre: "Romance, Drama",
+      releaseDate: "2025-01-05",
+      rating: "8.2",
+      duration: "158 min",
+      language: "Telugu",
+      description: "A passionate love story that challenges societal norms.",
+      votes: "412.8K",
       theaters: ["PVR Irrum Manzil", "INOX Maheshwari Parmeshwari", "Miraj Cinemas"]
     },
     {
       id: 6,
-      title: "Animal",
-      image: "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=400&h=600&fit=crop",
-      genre: "Action, Crime",
-      releaseDate: "2024-02-14",
+      title: "Sita Ramam",
+      image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=600&fit=crop",
+      genre: "Romance, Drama",
+      releaseDate: "2025-02-14",
       rating: "8.4",
-      duration: "201 min",
-      language: "Hindi",
-      description: "A son's love for his father leads him down a dark path of violence and revenge.",
-      votes: "412.9K",
+      duration: "163 min",
+      language: "Telugu",
+      description: "A timeless love story set against the backdrop of war.",
+      votes: "387.6K",
       theaters: ["AMB Cinemas Gachibowli", "PVR Forum Mall", "INOX Banjara Hills"]
     },
     {
       id: 7,
-      title: "12th Fail",
-      image: "https://images.unsplash.com/photo-1489599735734-79b4609e24c8?w=400&h=600&fit=crop",
-      genre: "Biography, Drama",
-      releaseDate: "2024-01-28",
-      rating: "9.1",
-      duration: "147 min",
-      language: "Hindi",
-      description: "Based on the true story of IPS officer Manoj Kumar Sharma who fearlessly embraced the idea of restarting his academic journey.",
-      votes: "189.4K",
+      title: "Kantara 2",
+      image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=600&fit=crop",
+      genre: "Action, Thriller",
+      releaseDate: "2025-01-28",
+      rating: "8.5",
+      duration: "148 min",
+      language: "Telugu",
+      description: "The divine intervention continues in this mystical thriller.",
+      votes: "456.3K",
       theaters: ["Cinepolis Mantra Mall", "PVR Next Galleria", "INOX Vishaal De Mall"]
     },
     {
       id: 8,
-      title: "Gadar 2",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
-      genre: "Action, Drama",
-      releaseDate: "2024-02-10",
-      rating: "7.9",
-      duration: "170 min",
-      language: "Hindi",
-      description: "Tara Singh goes to Pakistan to bring his son Jeete back home and faces various obstacles.",
-      votes: "267.8K",
+      title: "Vikram Vedha 2",
+      image: "https://images.unsplash.com/photo-1535016120720-40c646be5580?w=400&h=600&fit=crop",
+      genre: "Action, Thriller",
+      releaseDate: "2025-02-10",
+      rating: "8.3",
+      duration: "156 min",
+      language: "Telugu",
+      description: "The cat and mouse game between cop and gangster continues.",
+      votes: "378.9K",
       theaters: ["Shanti 70MM", "Bramaramba 70MM", "Odeon 70MM"]
     },
     {
       id: 9,
-      title: "Bhola Shankar",
-      image: "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=400&h=600&fit=crop",
-      genre: "Action, Comedy",
-      releaseDate: "2024-01-18",
-      rating: "6.8",
-      duration: "144 min",
+      title: "Master 2",
+      image: "https://images.unsplash.com/photo-1489599735734-79b4609e24c8?w=400&h=600&fit=crop",
+      genre: "Action, Thriller",
+      releaseDate: "2025-01-18",
+      rating: "8.1",
+      duration: "169 min",
       language: "Telugu",
-      description: "A taxi driver with a past seeks to protect his sister and her daughter from danger.",
-      votes: "156.2K",
+      description: "The master returns to face new challenges and adversaries.",
+      votes: "298.4K",
       theaters: ["AAA Cinemas", "Megaplex Kondapur", "Mallikarjuna 70MM"]
     },
     {
       id: 10,
-      title: "Bholaa",
-      image: "https://images.unsplash.com/photo-1489599735734-79b4609e24c8?w=400&h=600&fit=crop",
-      genre: "Action, Adventure",
-      releaseDate: "2024-02-05",
-      rating: "7.5",
-      duration: "144 min",
-      language: "Hindi",
-      description: "An ex-convict must deliver a truck to its destination while protecting a police officer and her son.",
-      votes: "198.7K",
+      title: "Ala Vaikunthapurramuloo 2",
+      image: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop",
+      genre: "Action, Family",
+      releaseDate: "2025-02-05",
+      rating: "8.0",
+      duration: "165 min",
+      language: "Telugu",
+      description: "Bantu's journey of self-discovery continues with new family dynamics.",
+      votes: "445.7K",
       theaters: ["PVR Promenade", "INOX Hyderabad Central", "Carnival Cinemas"]
     },
     {
       id: 11,
-      title: "Pathaan",
+      title: "Rangasthalam 2",
       image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
-      genre: "Action, Thriller",
-      releaseDate: "2024-01-12",
-      rating: "8.3",
-      duration: "146 min",
-      language: "Hindi",
-      description: "An exiled RAW agent partners with other agents to take down a rogue agent threatening India.",
-      votes: "445.1K",
+      genre: "Drama, Action",
+      releaseDate: "2025-01-12",
+      rating: "8.6",
+      duration: "159 min",
+      language: "Telugu",
+      description: "The village saga continues with new political upheavals.",
+      votes: "567.1K",
       theaters: ["PVR Panjagutta", "INOX Forum Vijaya Mall", "Asian Shaan"]
     },
     {
       id: 12,
-      title: "Varisu",
+      title: "Geetha Govindam 2",
       image: "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=400&h=600&fit=crop",
-      genre: "Action, Family",
-      releaseDate: "2024-01-25",
-      rating: "7.7",
-      duration: "168 min",
-      language: "Tamil",
-      description: "A young businessman becomes the head of a business empire and fights to protect his family legacy.",
-      votes: "223.6K",
+      genre: "Romance, Comedy",
+      releaseDate: "2025-01-25",
+      rating: "7.9",
+      duration: "143 min",
+      language: "Telugu",
+      description: "A heartwarming romantic comedy about second chances in love.",
+      votes: "334.2K",
       theaters: ["Devi Cineplex", "Sudarshan Cinemas", "CMR Vijay"]
     }
   ];
@@ -195,12 +194,6 @@ const Movies = () => {
   ];
 
   useEffect(() => {
-    // TODO: Replace with actual API call
-    // fetch('http://localhost:8080/api/movies')
-    //   .then(response => response.json())
-    //   .then(data => setMovies(data))
-    //   .catch(error => console.error('Error fetching movies:', error));
-    
     setMovies(latestMovies);
     setFilteredMovies(latestMovies);
   }, []);
@@ -255,7 +248,6 @@ const Movies = () => {
     return (
       <div className="min-h-screen bg-gray-50 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Back to Movies Button */}
           <Button
             variant="outline"
             onClick={handleBookingReset}
@@ -265,7 +257,6 @@ const Movies = () => {
             <span>Back to Movies</span>
           </Button>
 
-          {/* Selected Movie Info */}
           <Card className="mb-6">
             <CardContent className="p-4">
               <div className="flex items-center space-x-4">
@@ -288,7 +279,6 @@ const Movies = () => {
             </CardContent>
           </Card>
 
-          {/* Date Selector */}
           {bookingStep !== 'movies' && (
             <DateSelector
               selectedDate={selectedDate}
@@ -296,7 +286,6 @@ const Movies = () => {
             />
           )}
 
-          {/* Showtime Selector */}
           {bookingStep === 'showtimes' && (
             <ShowtimeSelector
               showtimes={showtimes}
@@ -305,7 +294,6 @@ const Movies = () => {
             />
           )}
 
-          {/* Seat Selection */}
           {bookingStep === 'seats' && selectedShowtime && (
             <SeatSelection
               selectedSeats={selectedSeats}
@@ -313,7 +301,6 @@ const Movies = () => {
             />
           )}
 
-          {/* Booking Summary */}
           {bookingStep === 'summary' && selectedSeats.length > 0 && (
             <BookingSummary
               movie={selectedMovie}
@@ -330,16 +317,13 @@ const Movies = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Movies in Hyderabad</h1>
           <p className="text-lg text-gray-600">Book tickets for the latest and trending movies</p>
         </div>
 
-        {/* Filters */}
         <div className="mb-8 bg-white p-6 rounded-xl shadow-sm">
           <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -353,7 +337,6 @@ const Movies = () => {
               </div>
             </div>
 
-            {/* Genre Filter */}
             <div className="flex gap-2 overflow-x-auto">
               {genres.map((genre) => (
                 <Button
@@ -370,7 +353,6 @@ const Movies = () => {
           </div>
         </div>
 
-        {/* Movies Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredMovies.map((movie) => (
             <MovieCard

@@ -1,4 +1,3 @@
-
 # CineTime - Professional Movie Ticket Booking Web Application
 
 CineTime is a professional, responsive React-based movie ticket booking web application inspired by BookMyShow. Built for the Hyderabad market, it provides a seamless experience for booking movie tickets with advanced features like seat selection, AI assistant, and dynamic showtime management.
@@ -169,16 +168,16 @@ fetch('http://localhost:8080/api/assistant/ask', {
 ```json
 {
   "id": 1,
-  "title": "Jawan",
+  "title": "Pushpa 2: The Rule",
   "image": "https://example.com/poster.jpg",
-  "genre": "Action, Thriller",
-  "language": "Hindi",
-  "duration": "169 min",
-  "rating": "8.5",
-  "votes": "485.2K",
+  "genre": "Action, Drama",
+  "language": "Telugu",
+  "duration": "178 min",
+  "rating": "8.7",
+  "votes": "567.3K",
   "description": "Movie description...",
-  "releaseDate": "2024-01-15",
-  "theaters": ["PVR Nexus", "INOX GVK One"]
+  "releaseDate": "2025-01-15",
+  "theaters": ["Sudarshan 35MM", "Sandhya 70MM"]
 }
 ```
 
@@ -220,7 +219,7 @@ fetch('http://localhost:8080/api/assistant/ask', {
   "customerPhone": "+91 9876543210",
   "seats": ["A5", "A6"],
   "totalAmount": 450,
-  "bookingDate": "2024-01-15T10:30:00Z",
+  "bookingDate": "2025-01-15T10:30:00Z",
   "status": "confirmed"
 }
 ```
@@ -251,6 +250,27 @@ Create `.env` file in project root:
 REACT_APP_API_URL=http://localhost:8080/api
 REACT_APP_PAYMENT_KEY=your_razorpay_key
 REACT_APP_APP_NAME=CineTime
+```
+
+### Custom Movie Images
+To replace placeholder images with your own:
+
+1. **Upload images to `/public/images/` directory**
+2. **Update movie data in `src/pages/Movies.tsx`**:
+```javascript
+const latestMovies = [
+  {
+    id: 1,
+    title: "Your Movie",
+    image: "/images/your-movie-poster.jpg", // Use local path
+    // ... other properties
+  }
+];
+```
+
+3. **Or use your image hosting service**:
+```javascript
+image: "https://yourdomain.com/images/movie-poster.jpg"
 ```
 
 ### Seat Configuration
@@ -347,14 +367,14 @@ public class MovieController {
 ## 🧪 Testing
 
 ### API Testing with Postman
-Sample requests included in `docs/api-collection.json`:
+Sample requests:
 
 ```bash
 # Get all movies
 GET http://localhost:8080/api/movies
 
 # Get showtimes for a movie
-GET http://localhost:8080/api/movies/1/showtimes?date=2024-01-15
+GET http://localhost:8080/api/movies/1/showtimes?date=2025-01-15
 
 # Create booking
 POST http://localhost:8080/api/bookings
