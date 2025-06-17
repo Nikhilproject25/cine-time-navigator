@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Film, Calendar, Ticket, ArrowRight } from 'lucide-react';
+import AIAssistant from '@/components/AIAssistant';
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -239,6 +239,9 @@ const Home = () => {
           </div>
         </div>
       </footer>
+
+      {/* AI Assistant */}
+      <AIAssistant />
     </div>
   );
 };
