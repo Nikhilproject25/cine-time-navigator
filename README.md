@@ -1,3 +1,4 @@
+
 # CineTime - Professional Movie Ticket Booking Web Application
 
 CineTime is a professional, responsive React-based movie ticket booking web application inspired by BookMyShow. Built for the Hyderabad market, it provides a seamless experience for booking movie tickets with advanced features like seat selection, AI assistant, and dynamic showtime management.
@@ -68,425 +69,409 @@ src/
 └── App.tsx                   # Main application routing
 ```
 
-## 🎨 Design System
+## 🔌 **STEP-BY-STEP API INTEGRATION GUIDE**
 
-### Colors
-```css
---primary: #E91E63 (Pink)     /* Main brand color */
---secondary: #8BC34A (Green)   /* Secondary actions */
---accent: #FF5722 (Orange)     /* Highlights */
---dark: #1A1A2E (Dark Blue)   /* Dark theme */
---light: #F8F9FA (Light Gray) /* Background */
-```
+### **Step 1: Setup API Configuration**
 
-### Key Features
-- **Mobile-first Responsive Design**
-- **BookMyShow-inspired UI/UX**
-- **Smooth Animations & Transitions**
-- **High-quality Image Optimization**
-- **Consistent Typography & Spacing**
+First, create a configuration file for your API base URL:
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn package manager
-
-### Installation
-```bash
-# Clone the repository
-git clone <your-repo-url>
-cd cinetime
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Open browser at http://localhost:8080
-```
-
-### Build for Production
-```bash
-npm run build
-```
-
-## 🔌 Backend Integration Guide
-
-### API Endpoints Configuration
-
-The application is designed to integrate with a Spring Boot backend. Update these API endpoints in the respective components:
-
-#### Movies API (`src/pages/Movies.tsx`)
+**Create `src/config/api.ts`:**
 ```typescript
-// Replace dummy data with:
-fetch('http://localhost:8080/api/movies')
-  .then(response => response.json())
-  .then(data => setMovies(data))
-```
-
-#### Showtimes API (`src/components/ShowtimeSelector.tsx`)
-```typescript
-// Add dynamic showtime fetching:
-fetch(`http://localhost:8080/api/movies/${movieId}/showtimes?date=${selectedDate}`)
-  .then(response => response.json())
-  .then(data => setShowtimes(data))
-```
-
-#### Seat Availability API (`src/components/SeatSelection.tsx`)
-```typescript
-// Fetch real-time seat availability:
-fetch(`http://localhost:8080/api/showtimes/${showtimeId}/seats`)
-  .then(response => response.json())
-  .then(data => updateSeatAvailability(data))
-```
-
-#### Booking API (`src/components/BookingSummary.tsx`)
-```typescript
-// Complete booking submission:
-fetch('http://localhost:8080/api/bookings', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(bookingData)
-})
-```
-
-#### AI Assistant API (`src/components/AIAssistant.tsx`)
-```typescript
-// AI query processing:
-fetch('http://localhost:8080/api/assistant/ask', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ query: userMessage })
-})
-```
-
-### Expected Data Formats
-
-#### Movie Object
-```json
-{
-  "id": 1,
-  "title": "Pushpa 2: The Rule",
-  "image": "https://example.com/poster.jpg",
-  "genre": "Action, Drama",
-  "language": "Telugu",
-  "duration": "178 min",
-  "rating": "8.7",
-  "votes": "567.3K",
-  "description": "Movie description...",
-  "releaseDate": "2025-01-15",
-  "theaters": ["Sudarshan 35MM", "Sandhya 70MM"]
-}
-```
-
-#### Showtime Object
-```json
-{
-  "id": 1,
-  "movieId": 1,
-  "time": "07:00 PM",
-  "theater": "PVR Nexus",
-  "screen": "Screen 1",
-  "price": 250,
-  "availableSeats": 120,
-  "totalSeats": 150
-}
-```
-
-#### Seat Object
-```json
-{
-  "seatId": "A5",
-  "row": "A",
-  "number": 5,
-  "type": "regular", // or "premium"
-  "price": 200,
-  "isAvailable": true,
-  "isBooked": false
-}
-```
-
-#### Booking Object
-```json
-{
-  "bookingId": "BK123456789",
-  "movieId": 1,
-  "showtimeId": 1,
-  "customerName": "John Doe",
-  "customerEmail": "john@example.com",
-  "customerPhone": "+91 9876543210",
-  "seats": ["A5", "A6"],
-  "totalAmount": 450,
-  "bookingDate": "2025-01-15T10:30:00Z",
-  "status": "confirmed"
-}
-```
-
-## ⚙️ Configuration
-
-### API Base URL Setup
-Create a configuration file for easy API management:
-
-```typescript
-// src/config/api.ts
 export const API_CONFIG = {
-  BASE_URL: process.env.REACT_APP_API_URL || 'http://localhost:8080/api',
+  BASE_URL: 'http://localhost:8080/api', // Replace with your backend URL
   ENDPOINTS: {
     MOVIES: '/movies',
     SHOWTIMES: '/showtimes',
     BOOKINGS: '/bookings',
     SEATS: '/seats',
     ASSISTANT: '/assistant/ask',
-    CONTACT: '/contact'
+    CONTACT: '/contact',
+    SPORTS_EVENTS: '/sports-events'
   }
+};
+
+// Helper function for API calls
+export const apiCall = async (endpoint: string, options: RequestInit = {}) => {
+  const response = await fetch(`${API_CONFIG.BASE_URL}${endpoint}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+    ...options,
+  });
+  
+  if (!response.ok) {
+    throw new Error(`API Error: ${response.status}`);
+  }
+  
+  return response.json();
 };
 ```
 
-### Environment Variables
-Create `.env` file in project root:
-```env
-REACT_APP_API_URL=http://localhost:8080/api
-REACT_APP_PAYMENT_KEY=your_razorpay_key
-REACT_APP_APP_NAME=CineTime
+### **Step 2: Replace Movies Data**
+
+**File: `src/pages/Movies.tsx`**
+
+**Find this section (around lines 15-18):**
+```typescript
+useEffect(() => {
+  setMovies(latestMovies);
+  setFilteredMovies(latestMovies);
+}, []);
 ```
 
-### Custom Movie Images
-To replace placeholder images with your own:
+**Replace with:**
+```typescript
+useEffect(() => {
+  const fetchMovies = async () => {
+    try {
+      // COMMENT OUT THE DUMMY DATA:
+      // setMovies(latestMovies);
+      // setFilteredMovies(latestMovies);
+      
+      // ADD YOUR API CALL HERE:
+      const response = await fetch('http://localhost:8080/api/movies');
+      const moviesData = await response.json();
+      setMovies(moviesData);
+      setFilteredMovies(moviesData);
+    } catch (error) {
+      console.error('Error fetching movies:', error);
+      // Fallback to dummy data if API fails
+      setMovies(latestMovies);
+      setFilteredMovies(latestMovies);
+    }
+  };
 
-1. **Upload images to `/public/images/` directory**
-2. **Update movie data in `src/pages/Movies.tsx`**:
-```javascript
+  fetchMovies();
+}, []);
+```
+
+**Also comment out the dummy data array (around lines 20-140):**
+```typescript
+// COMMENT OUT THIS ENTIRE ARRAY:
+/*
 const latestMovies = [
   {
     id: 1,
-    title: "Your Movie",
-    image: "/images/your-movie-poster.jpg", // Use local path
-    // ... other properties
-  }
-];
-```
-
-3. **Or use your image hosting service**:
-```javascript
-image: "https://yourdomain.com/images/movie-poster.jpg"
-```
-
-### Seat Configuration
-Customize seat layout in `SeatSelection.tsx`:
-```typescript
-const SEAT_CONFIG = {
-  ROWS: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
-  SEATS_PER_ROW: 12,
-  PREMIUM_ROWS: ['F', 'G', 'H', 'I', 'J'], // Last 5 rows
-  PRICES: {
-    REGULAR: 200,
-    PREMIUM: 300
+    title: "Pushpa 2: The Rule",
+    // ... rest of dummy data
   },
-  MAX_SEATS_PER_BOOKING: 10
+  // ... all other movies
+];
+*/
+```
+
+### **Step 3: Replace Sports Events Data**
+
+**File: `src/pages/SportsEvents.tsx`**
+
+**Find the dummy events array (around lines 10-50) and replace:**
+```typescript
+useEffect(() => {
+  const fetchEvents = async () => {
+    try {
+      // COMMENT OUT DUMMY DATA:
+      // setEvents(dummyEvents);
+      
+      // ADD YOUR API CALL:
+      const response = await fetch('http://localhost:8080/api/sports-events');
+      const eventsData = await response.json();
+      setEvents(eventsData);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      // Fallback to dummy data
+      setEvents(dummyEvents);
+    }
+  };
+
+  fetchEvents();
+}, []);
+```
+
+### **Step 4: Replace Booking Submission**
+
+**File: `src/pages/Booking.tsx`**
+
+**Find the handleSubmit function (around lines 70-100) and replace:**
+```typescript
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+
+  try {
+    // COMMENT OUT DUMMY SIMULATION:
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+    // const result = { success: true, bookingId: 'BK...' };
+
+    // ADD YOUR API CALL:
+    const response = await fetch('http://localhost:8080/api/bookings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...formData,
+        movieId: movie?.id,
+        eventId: event?.id,
+        title: movie?.title || event?.title,
+        type: movie ? 'movie' : 'event'
+      }),
+    });
+    
+    const result = await response.json();
+
+    if (result.success) {
+      setBookingConfirmed(true);
+      setBookingId(result.bookingId);
+      toast({
+        title: "Booking Confirmed!",
+        description: `Your booking ID is ${result.bookingId}`,
+      });
+    } else {
+      throw new Error(result.message || 'Booking failed');
+    }
+  } catch (error) {
+    console.error('Booking error:', error);
+    toast({
+      title: "Booking Failed",
+      description: "Something went wrong. Please try again.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsLoading(false);
+  }
 };
 ```
 
-## 🔧 Backend Requirements (Spring Boot)
+### **Step 5: Replace My Bookings Data**
 
-### Essential Controllers
-1. **MovieController** - Movie CRUD operations
-2. **ShowtimeController** - Showtime management
-3. **BookingController** - Booking processing
-4. **SeatController** - Seat availability
-5. **AssistantController** - AI chat processing
+**File: `src/pages/MyBookings.tsx`**
 
-### Database Schema (MySQL)
-```sql
--- Movies table
-CREATE TABLE movies (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  title VARCHAR(255) NOT NULL,
-  genre VARCHAR(255),
-  language VARCHAR(100),
-  duration VARCHAR(50),
-  rating DECIMAL(2,1),
-  votes VARCHAR(50),
-  description TEXT,
-  image_url VARCHAR(500),
-  release_date DATE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+**Find the fetchBookings function (around lines 50-70) and replace:**
+```typescript
+useEffect(() => {
+  const fetchBookings = async () => {
+    try {
+      // COMMENT OUT DUMMY DATA:
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+      // setBookings(dummyBookings);
 
--- Theaters table
-CREATE TABLE theaters (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL,
-  location VARCHAR(255),
-  total_screens INT,
-  address TEXT
-);
+      // ADD YOUR API CALL:
+      const response = await fetch('http://localhost:8080/api/bookings');
+      const bookingsData = await response.json();
+      setBookings(bookingsData);
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+      // Fallback to dummy data
+      setBookings(dummyBookings);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
--- Showtimes table
-CREATE TABLE showtimes (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  movie_id BIGINT,
-  theater_id BIGINT,
-  show_date DATE,
-  show_time TIME,
-  screen_number VARCHAR(50),
-  base_price DECIMAL(10,2),
-  available_seats INT,
-  total_seats INT,
-  FOREIGN KEY (movie_id) REFERENCES movies(id),
-  FOREIGN KEY (theater_id) REFERENCES theaters(id)
-);
-
--- Bookings table
-CREATE TABLE bookings (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  booking_id VARCHAR(20) UNIQUE,
-  showtime_id BIGINT,
-  customer_name VARCHAR(255),
-  customer_email VARCHAR(255),
-  customer_phone VARCHAR(20),
-  seats JSON,
-  total_amount DECIMAL(10,2),
-  booking_status VARCHAR(50),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (showtime_id) REFERENCES showtimes(id)
-);
+  fetchBookings();
+}, []);
 ```
 
-### CORS Configuration
+### **Step 6: Replace AI Assistant API**
+
+**File: `src/components/AIAssistant.tsx`**
+
+**Find the handleSendMessage function (around lines 35-70) and replace:**
+```typescript
+const handleSendMessage = async () => {
+  if (!inputMessage.trim()) return;
+
+  const userMessage = inputMessage;
+  setInputMessage('');
+  
+  setMessages(prev => [...prev, {
+    type: 'user',
+    content: userMessage
+  }]);
+
+  try {
+    // COMMENT OUT DUMMY SIMULATION:
+    // setTimeout(() => { ... dummy responses ... }, 1000);
+
+    // ADD YOUR API CALL:
+    const response = await fetch('http://localhost:8080/api/assistant/ask', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query: userMessage }),
+    });
+    
+    const result = await response.json();
+    
+    setMessages(prev => [...prev, {
+      type: 'assistant',
+      content: result.response || result.message
+    }]);
+  } catch (error) {
+    console.error('AI Assistant error:', error);
+    setMessages(prev => [...prev, {
+      type: 'assistant',
+      content: 'Sorry, I encountered an error. Please try again.'
+    }]);
+  }
+};
+```
+
+### **Step 7: Replace Contact Form Submission**
+
+**File: `src/pages/Contact.tsx`**
+
+**Find the handleSubmit function and replace dummy simulation with:**
+```typescript
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  try {
+    // COMMENT OUT DUMMY SIMULATION:
+    // await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // ADD YOUR API CALL:
+    const response = await fetch('http://localhost:8080/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      toast({
+        title: "Message Sent!",
+        description: "We'll get back to you soon.",
+      });
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    }
+  } catch (error) {
+    console.error('Contact form error:', error);
+    toast({
+      title: "Error",
+      description: "Failed to send message. Please try again.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+```
+
+## 📋 **QUICK CHECKLIST FOR API INTEGRATION**
+
+### ✅ **Files to Update:**
+1. **Create:** `src/config/api.ts` (API configuration)
+2. **Update:** `src/pages/Movies.tsx` (lines 15-18 and 20-140)
+3. **Update:** `src/pages/SportsEvents.tsx` (useEffect function)
+4. **Update:** `src/pages/Booking.tsx` (handleSubmit function)
+5. **Update:** `src/pages/MyBookings.tsx` (fetchBookings function)
+6. **Update:** `src/components/AIAssistant.tsx` (handleSendMessage function)
+7. **Update:** `src/pages/Contact.tsx` (handleSubmit function)
+
+### ✅ **What to Comment Out:**
+- All `latestMovies`, `dummyEvents`, `dummyBookings` arrays
+- `setTimeout` simulations in functions
+- Dummy response objects
+
+### ✅ **What to Replace With:**
+- `fetch()` calls to your Spring Boot API
+- Proper error handling with try-catch blocks
+- Real data processing from API responses
+
+## 🔧 **Expected API Response Formats**
+
+### Movies API Response (`GET /api/movies`)
+```json
+[
+  {
+    "id": 1,
+    "title": "Pushpa 2: The Rule",
+    "image": "https://example.com/poster.jpg",
+    "genre": "Action, Drama",
+    "language": "Telugu",
+    "duration": "178 min",
+    "rating": "8.7",
+    "votes": "567.3K",
+    "description": "Movie description...",
+    "releaseDate": "2025-01-15",
+    "theaters": ["Sudarshan 35MM", "Sandhya 70MM"]
+  }
+]
+```
+
+### Bookings API Response (`POST /api/bookings`)
+```json
+{
+  "success": true,
+  "bookingId": "BK123456789",
+  "message": "Booking confirmed successfully!",
+  "totalAmount": 450
+}
+```
+
+### AI Assistant API Response (`POST /api/assistant/ask`)
+```json
+{
+  "response": "Here are some popular Telugu movies currently showing...",
+  "success": true
+}
+```
+
+## 🚀 **Testing Your API Integration**
+
+### 1. **Start Your Spring Boot Backend**
+```bash
+# Make sure your Spring Boot app is running on http://localhost:8080
+./mvnw spring-boot:run
+```
+
+### 2. **Update Frontend API URLs**
+- Change `http://localhost:8080/api` to your actual backend URL if different
+- Update in `src/config/api.ts` and all fetch calls
+
+### 3. **Test Each Feature**
+- **Movies:** Verify movie list loads from your API
+- **Booking:** Submit a test booking and check database
+- **My Bookings:** Verify bookings display from your API
+- **AI Assistant:** Test chat queries
+- **Contact:** Submit contact form
+
+### 4. **Debug Common Issues**
+- **CORS Errors:** Add CORS configuration in Spring Boot
+- **404 Errors:** Verify API endpoint URLs match
+- **JSON Errors:** Check request/response data formats
+
+## 🔐 **CORS Configuration for Spring Boot**
+
+Add this to your Spring Boot application:
+
 ```java
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"})
 @RestController
 @RequestMapping("/api")
 public class MovieController {
-    // Controller methods...
+    // Your controller methods
 }
 ```
 
-## 🧪 Testing
+## 📱 **Mobile Optimization & Performance**
 
-### API Testing with Postman
-Sample requests:
-
-```bash
-# Get all movies
-GET http://localhost:8080/api/movies
-
-# Get showtimes for a movie
-GET http://localhost:8080/api/movies/1/showtimes?date=2025-01-15
-
-# Create booking
-POST http://localhost:8080/api/bookings
-Content-Type: application/json
-{
-  "showtimeId": 1,
-  "customerName": "John Doe",
-  "customerEmail": "john@example.com",
-  "seats": ["A5", "A6"],
-  "totalAmount": 450
-}
-```
-
-### Frontend Testing
-```bash
-# Run development server
-npm run dev
-
-# Test responsive design on different screen sizes
-# Verify all booking flows work end-to-end
-# Check AI assistant responses
-# Validate form submissions
-```
-
-## 📱 Mobile Optimization
-
-- **Touch-friendly Interface**: Large buttons for seat selection and showtime picking
-- **Responsive Breakpoints**: Optimized for phones, tablets, and desktops
+- **Touch-friendly Interface**: Large buttons for seat selection
+- **Responsive Breakpoints**: Optimized for all screen sizes
 - **Fast Loading**: Optimized images and lazy loading
-- **Offline Support**: Service worker ready for PWA conversion
-
-## 🎯 Performance Features
-
-- **Image Optimization**: WebP format with fallbacks
-- **Lazy Loading**: Components and images load on demand
-- **Code Splitting**: Route-based chunk splitting
 - **Caching**: API response caching for better performance
-- **Smooth Animations**: Hardware-accelerated transitions
-
-## 🚀 Deployment
-
-### Vercel Deployment
-```bash
-npm install -g vercel
-vercel --prod
-```
-
-### Netlify Deployment
-```bash
-npm run build
-# Upload dist folder to Netlify
-```
-
-### Docker Deployment
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
-```
-
-## 🔐 Security Considerations
-
-- **Input Validation**: All user inputs sanitized
-- **XSS Protection**: React's built-in protection
-- **API Security**: CORS properly configured
-- **Payment Security**: PCI DSS compliant payment processing
-- **Data Privacy**: GDPR compliant data handling
-
-## 🛠️ Development Tools
-
-- **ESLint**: Code quality enforcement
-- **Prettier**: Code formatting
-- **TypeScript**: Type safety
-- **Vite**: Fast development server
-- **Git Hooks**: Pre-commit code validation
-
-## 📈 Analytics Integration
-
-Ready for integration with:
-- **Google Analytics 4**
-- **Mixpanel** for user behavior tracking
-- **Hotjar** for user experience insights
-- **Performance monitoring** with Web Vitals
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 📞 Support
-
-- **Email**: support@cinetime.com
-- **Phone**: +91 9876543210
-- **Live Chat**: Use the AI Assistant on the website
-- **Documentation**: [Full API Documentation](./docs/api.md)
 
 ---
 
-**Built with ❤️ for movie lovers in Hyderabad**
+**🎯 You're all set! Follow the steps above to connect your APIs. If you encounter issues, check the console logs and verify your Spring Boot endpoints are working with tools like Postman.**
 
 **Default Location**: Hyderabad, Telangana  
-**Target Audience**: Movie enthusiasts and entertainment seekers  
-**Tech Stack**: React + TypeScript + Tailwind CSS + Spring Boot + MySQL
+**Backend**: Spring Boot + MySQL  
+**Frontend**: React + TypeScript + Tailwind CSS
