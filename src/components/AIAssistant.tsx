@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,6 +23,7 @@ const AIAssistant = () => {
     "Action movies in IMAX"
   ];
 
+  // ===== API INTEGRATION CODE - ADDED FOR BACKEND CONNECTION =====
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
@@ -35,7 +35,47 @@ const AIAssistant = () => {
       content: userMessage
     }]);
 
-    // Simulate AI response (replace with actual API call later)
+    try {
+      // NEW API CALL CODE - Replace dummy simulation with your backend API
+      const response = await fetch('http://localhost:8080/api/assistant/ask', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: userMessage }),
+      });
+      
+      const result = await response.json();
+      console.log('AI Assistant API response:', result);
+      
+      setMessages(prev => [...prev, {
+        type: 'assistant',
+        content: result.response || result.message || 'Sorry, I encountered an error. Please try again.'
+      }]);
+    } catch (error) {
+      console.error('AI Assistant error:', error);
+      setMessages(prev => [...prev, {
+        type: 'assistant',
+        content: 'Sorry, I encountered an error connecting to the server. Please try again.'
+      }]);
+    }
+  };
+
+  // ===== DUMMY AI RESPONSES - COMMENTED FOR API INTEGRATION =====
+  // KEEP THIS COMMENTED - Uncomment if you need to use dummy responses again
+  /*
+  const handleSendMessage = async () => {
+    if (!inputMessage.trim()) return;
+
+    const userMessage = inputMessage;
+    setInputMessage('');
+    
+    setMessages(prev => [...prev, {
+      type: 'user',
+      content: userMessage
+    }]);
+
+    // OLD DUMMY SIMULATION CODE
     setTimeout(() => {
       let response = "I understand you're looking for information about movies. ";
       
@@ -59,6 +99,7 @@ const AIAssistant = () => {
       }]);
     }, 1000);
   };
+  */
 
   const handlePresetQuery = (query) => {
     setInputMessage(query);

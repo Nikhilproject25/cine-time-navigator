@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -56,28 +55,61 @@ const Booking = () => {
     }));
   };
 
+  // ===== API INTEGRATION CODE - ADDED FOR BACKEND CONNECTION =====
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('http://localhost:8080/api/bookings', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     ...formData,
-      //     movieId: movie?.id,
-      //     eventId: event?.id,
-      //     title: movie?.title || event?.title,
-      //     type: movie ? 'movie' : 'event'
-      //   }),
-      // });
-      // const result = await response.json();
+      // NEW API CALL CODE - Replace dummy simulation with your backend API
+      const response = await fetch('http://localhost:8080/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          movieId: movie?.id,
+          eventId: event?.id,
+          title: movie?.title || event?.title,
+          type: movie ? 'movie' : 'event'
+        }),
+      });
+      
+      const result = await response.json();
+      console.log('Booking API response:', result);
 
-      // Simulate API call with dummy data
+      if (result.success) {
+        setBookingConfirmed(true);
+        setBookingId(result.bookingId);
+        toast({
+          title: "Booking Confirmed!",
+          description: `Your booking ID is ${result.bookingId}`,
+        });
+      } else {
+        throw new Error(result.message || 'Booking failed');
+      }
+    } catch (error) {
+      console.error('Booking error:', error);
+      toast({
+        title: "Booking Failed",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // ===== DUMMY BOOKING CODE - COMMENTED FOR API INTEGRATION =====
+  // KEEP THIS COMMENTED - Uncomment if you need to use dummy simulation again
+  /*
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      // OLD DUMMY SIMULATION CODE
       await new Promise(resolve => setTimeout(resolve, 2000));
       const result = {
         success: true,
@@ -106,6 +138,7 @@ const Booking = () => {
       setIsLoading(false);
     }
   };
+  */
 
   const calculateTotal = () => {
     const basePrice = movie ? 200 : 300;

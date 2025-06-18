@@ -22,7 +22,39 @@ const Movies = () => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [bookingStep, setBookingStep] = useState('movies'); // movies, showtimes, seats, summary
 
-  // Enhanced movie data with diverse images and 2025 dates
+  // ===== API INTEGRATION CODE - ADDED FOR BACKEND CONNECTION =====
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        // NEW API CALL CODE - Replace dummy data with your backend API
+        const response = await fetch('http://localhost:8080/api/movies');
+        const moviesData = await response.json();
+        setMovies(moviesData);
+        setFilteredMovies(moviesData);
+        console.log('Movies loaded from API:', moviesData);
+      } catch (error) {
+        console.error('Error fetching movies from API:', error);
+        // Fallback to dummy data if API fails
+        setMovies(latestMovies);
+        setFilteredMovies(latestMovies);
+      }
+    };
+
+    fetchMovies();
+  }, []);
+
+  // ===== DUMMY DATA - COMMENTED FOR API INTEGRATION =====
+  // KEEP THIS COMMENTED - Uncomment if you need to use dummy data again
+  /*
+  useEffect(() => {
+    // OLD DUMMY DATA LOADING CODE
+    setMovies(latestMovies);
+    setFilteredMovies(latestMovies);
+  }, []);
+  */
+
+  // ===== DUMMY MOVIES DATA - COMMENTED FOR API INTEGRATION =====
+  // KEEP THIS COMMENTED - Your API should return data in this format
   const latestMovies = [
     {
       id: 1,
@@ -184,6 +216,8 @@ const Movies = () => {
 
   const genres = ['All', 'Action', 'Drama', 'Comedy', 'Thriller', 'Romance', 'Biography'];
 
+  // ===== DUMMY SHOWTIMES DATA - COMMENTED FOR API INTEGRATION =====
+  // KEEP THIS COMMENTED - Your API should return showtimes data
   const showtimes = [
     { time: "10:15 AM", theater: "PVR Nexus", price: 180 },
     { time: "12:30 PM", theater: "INOX GVK One", price: 200 },
@@ -192,11 +226,6 @@ const Movies = () => {
     { time: "7:15 PM", theater: "PVR Kukatpally", price: 250 },
     { time: "9:30 PM", theater: "Forum Sujana Mall", price: 230 }
   ];
-
-  useEffect(() => {
-    setMovies(latestMovies);
-    setFilteredMovies(latestMovies);
-  }, []);
 
   useEffect(() => {
     let filtered = movies;

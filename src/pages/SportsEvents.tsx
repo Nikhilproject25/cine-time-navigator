@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,39 @@ const SportsEvents = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Dummy data for sports and events (replace with API call to GET /api/sports-events)
+  // ===== API INTEGRATION CODE - ADDED FOR BACKEND CONNECTION =====
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        // NEW API CALL CODE - Replace dummy data with your backend API
+        const response = await fetch('http://localhost:8080/api/sports-events');
+        const eventsData = await response.json();
+        setEvents(eventsData);
+        setFilteredEvents(eventsData);
+        console.log('Events loaded from API:', eventsData);
+      } catch (error) {
+        console.error('Error fetching events from API:', error);
+        // Fallback to dummy data if API fails
+        setEvents(dummyEvents);
+        setFilteredEvents(dummyEvents);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  // ===== DUMMY DATA - COMMENTED FOR API INTEGRATION =====
+  // KEEP THIS COMMENTED - Uncomment if you need to use dummy data again
+  /*
+  useEffect(() => {
+    // OLD DUMMY DATA LOADING CODE
+    setEvents(dummyEvents);
+    setFilteredEvents(dummyEvents);
+  }, []);
+  */
+
+  // ===== DUMMY EVENTS DATA - COMMENTED FOR API INTEGRATION =====
+  // KEEP THIS COMMENTED - Your API should return data in this format
   const dummyEvents = [
     {
       id: 1,
@@ -84,17 +115,6 @@ const SportsEvents = () => {
   ];
 
   const categories = ['All', 'Sports', 'Concert', 'Comedy', 'Food', 'Conference'];
-
-  useEffect(() => {
-    // TODO: Replace with actual API call
-    // fetch('http://localhost:8080/api/sports-events')
-    //   .then(response => response.json())
-    //   .then(data => setEvents(data))
-    //   .catch(error => console.error('Error fetching events:', error));
-    
-    setEvents(dummyEvents);
-    setFilteredEvents(dummyEvents);
-  }, []);
 
   useEffect(() => {
     let filtered = events;

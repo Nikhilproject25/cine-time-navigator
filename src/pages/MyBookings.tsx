@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +8,49 @@ const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Dummy bookings data (replace with API call to GET /api/bookings)
+  // ===== API INTEGRATION CODE - ADDED FOR BACKEND CONNECTION =====
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        // NEW API CALL CODE - Replace dummy data with your backend API
+        const response = await fetch('http://localhost:8080/api/bookings');
+        const bookingsData = await response.json();
+        setBookings(bookingsData);
+        console.log('Bookings loaded from API:', bookingsData);
+      } catch (error) {
+        console.error('Error fetching bookings from API:', error);
+        // Fallback to dummy data if API fails
+        setBookings(dummyBookings);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBookings();
+  }, []);
+
+  // ===== DUMMY DATA - COMMENTED FOR API INTEGRATION =====
+  // KEEP THIS COMMENTED - Uncomment if you need to use dummy data again
+  /*
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        // OLD DUMMY DATA LOADING CODE
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setBookings(dummyBookings);
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBookings();
+  }, []);
+  */
+
+  // ===== DUMMY BOOKINGS DATA - COMMENTED FOR API INTEGRATION =====
+  // KEEP THIS COMMENTED - Your API should return data in this format
   const dummyBookings = [
     {
       id: 1,
@@ -68,27 +109,6 @@ const MyBookings = () => {
       bookingDate: '2024-02-25'
     }
   ];
-
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        // TODO: Replace with actual API call
-        // const response = await fetch('http://localhost:8080/api/bookings');
-        // const data = await response.json();
-        // setBookings(data);
-
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setBookings(dummyBookings);
-      } catch (error) {
-        console.error('Error fetching bookings:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBookings();
-  }, []);
 
   const getStatusColor = (status) => {
     switch (status) {
